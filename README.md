@@ -32,7 +32,7 @@ The Klarity Sync Plugin can be installed manually:
 
 1. Open Obsidian Settings
 2. Navigate to Community Plugins and find "Klarity Sync"
-3. Enter your Klarity API key
+3. Enter your Klarity API key. You get the key from [Klarity Settings](https://klarity.pro/settings?tab=api])
 4. Configure sync settings:
    * Set your preferred sync directory
    * Enable/disable auto-sync
