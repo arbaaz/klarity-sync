@@ -6,3 +6,12 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+textarea.autoresize {
+  display: block;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  min-height: 100px;
+  box-sizing: border-box;
+}

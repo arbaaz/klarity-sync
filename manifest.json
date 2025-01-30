@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "klaritypro-sync",
+	"name": "Klarity Pro Sync",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Sync your Klarity Pro notes to Obsidian.",
+	"author": "Klarity",
+	"authorUrl": "https://klarity.pro",
+	"fundingUrl": "https://klarity.pro/pricing",
 	"isDesktopOnly": false
 }
