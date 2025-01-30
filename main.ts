@@ -107,7 +107,7 @@ export default class KlarityPlugin extends Plugin {
 
   async fetchNotes(): Promise<{ notes: KlarityNote[] }> {
     try {
-      const response = await fetch("https://local-api.klarity.pro/api/notes", {
+      const response = await fetch("https://api.klarity.pro/api/notes", {
         headers: {
           Authorization: `Bearer ${this.settings.apiKey}`,
           "Content-Type": "application/json",
