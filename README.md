@@ -17,22 +17,22 @@ Through the plugin settings, you can customize the sync directory, frequency, an
 
 The Klarity Sync Plugin can be installed manually:
 
-#### Method 1: BRAT Installation
+#### Method 1: Manual Installation
+* Download the `klarity-sync.zip` from [latest release](https://github.com/arbaaz/klarity-sync/releases)
+* Unzip and move the `klarity-sync` folder under `.obsidian/plugins` in your vault
+* Enable the plugin in Obsidian's Community Plugins settings
+
+#### Method 2: BRAT Installation (Not working for me)
 * Enable Community Plugins in Obsidian and install [Obsidian42 - BRAT](https://github.com/TfTHacker/obsidian42-brat)
 * Go to settings and under "Beta Plugin List" click "Add Beta plugin"
 * Add this repository URL
 
-#### Method 2: Manual Installation
-* Create a `klarity-sync` folder under `.obsidian/plugins` in your vault
-* Download the `main.js`, `manifest.json`, and `styles.css` files from the latest release
-* Add these files to the folder you created
-* Enable the plugin in Obsidian's Community Plugins settings
-
+  
 ### Configuration
 
 1. Open Obsidian Settings
 2. Navigate to Community Plugins and find "Klarity Sync"
-3. Enter your Klarity API key. You get the key from [Klarity Settings](https://klarity.pro/settings?tab=api])
+3. Enter your Klarity API key. You get the key from [Klarity Settings](https://klarity.pro/settings?tab=api)
 4. Configure sync settings:
    * Set your preferred sync directory
    * Enable/disable auto-sync
