@@ -1,10 +1,10 @@
 {
-	"id": "klaritypro-sync",
-	"name": "Klarity Pro Sync",
-	"version": "0.1.0",
+	"id": "klarity-sync",
+	"name": "Klarity Sync",
+	"version": "0.1.1",
 	"minAppVersion": "0.15.0",
-	"description": "Sync your Klarity Pro notes to Obsidian.",
-	"author": "Klarity",
+	"description": "Sync your Klarity voice notes",
+	"author": "arbaaz",
 	"authorUrl": "https://klarity.pro",
 	"fundingUrl": "https://klarity.pro/pricing",
 	"isDesktopOnly": false
