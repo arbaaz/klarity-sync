@@ -1,5 +1,35 @@
 # Klarity Obsidian Plugin
 
+## Development
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run in watch mode
+
+```bash
+npm run dev
+```
+
+### Create a symlink
+
+```bash
+ln -s "/Users/arbaaz/labspace/klarity-obsidian-sync" "/Users/arbaaz/Downloads/Obsidian/.obsidian/plugins/klarity-sync"
+```
+
+Make changes to the plugin and change the version in package.json
+
+```bash
+npm run version
+```
+
+```bash
+npm run release
+```
+
 ## First time developing plugins?
 
 Quick starting guide for new plugin devs:
