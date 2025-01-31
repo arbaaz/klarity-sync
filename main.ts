@@ -6,6 +6,7 @@ import {
   TFile,
   Notice,
   normalizePath,
+  requestUrl,
 } from "obsidian";
 
 interface KlarityPluginSettings {
@@ -107,25 +108,74 @@ export default class KlarityPlugin extends Plugin {
 
   async fetchNotes(): Promise<{ notes: KlarityNote[] }> {
     try {
-      const response = await fetch("https://api.klarity.pro/api/notes", {
+      // Validate API key format first
+      if (!this.settings.apiKey.trim()) {
+        throw new Error("API key is empty. Please add your API key in settings.");
+      }
+
+      if (this.settings.apiKey.length < 32) {
+        throw new Error("API key appears invalid. It should be at least 32 characters long.");
+      }
+
+      const response = await requestUrl({
+        url: "https://api.klarity.pro/api/notes",
         headers: {
           Authorization: `Bearer ${this.settings.apiKey}`,
           "Content-Type": "application/json",
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch notes from Klarity");
+      // Check for authentication issues first
+      if (response.status === 401 || response.status === 403) {
+        const isCommented = true; // Flag to check if Authorization header is commented out
+        if (isCommented) {
+          throw new Error("Authentication required. Please uncomment the Authorization header in the plugin code.");
+        } else {
+          throw new Error("Authentication failed. Please verify your API key is correct in settings.");
+        }
       }
 
-      const result = await response.json();
+      if (response.status === 404) {
+        throw new Error("API endpoint not found. The Klarity API may have changed or is temporarily unavailable.");
+      }
 
-      console.log(result);
+      if (response.status >= 500) {
+        throw new Error("Klarity server error. Please try again later or contact support if the issue persists.");
+      }
+
+      if (response.status !== 200) {
+        throw new Error(`Unexpected error (HTTP ${response.status}). Please try again later.`);
+      }
+
+      const result = await response.json;
+
+      // Validate response structure
+      if (!result || !Array.isArray(result.notes)) {
+        throw new Error("Invalid response from Klarity API. Expected notes array.");
+      }
 
       return result;
     } catch (error) {
       console.error("Error fetching notes:", error);
-      throw error;
+
+      if (error.status === 401) {
+        throw new Error("Authentication failed. Make sure your API key is correct.");
+      }
+
+      // Handle network errors
+      if (error.message.includes("Failed to fetch")) {
+        throw new Error("Cannot connect to Klarity. Please check your internet connection.");
+      }
+
+      // Pass through our custom error messages
+      if (error.message.includes("API key") ||
+          error.message.includes("Authentication") ||
+          error.message.includes("Invalid response")) {
+        throw error;
+      }
+
+      // Fallback for unexpected errors
+      throw new Error(`Failed to sync with Klarity: ${error.message}`);
     }
   }
 
@@ -171,7 +221,7 @@ export default class KlarityPlugin extends Plugin {
     }
   }
 
-  async syncNotes(showNotice: boolean = true) {
+  async syncNotes(showNotice = true) {
     if (!this.settings.apiKey) {
       new Notice("Please set your Klarity API key in settings");
       return;
@@ -189,17 +239,24 @@ export default class KlarityPlugin extends Plugin {
       let processed = 0;
 
       for (const note of notes) {
-        await this.createOrUpdateNote(note);
-        processed++;
-        statusBarItem.setText(
-          `Syncing with Klarity... ${processed}/${notes.length}`
-        );
+        try {
+          await this.createOrUpdateNote(note);
+          processed++;
+          statusBarItem.setText(
+            `Syncing with Klarity... ${processed}/${notes.length}`
+          );
+        } catch (noteError) {
+          console.error(`Error processing note "${note.title}":`, noteError);
+          new Notice(`Failed to save note "${note.title}". Check console for details.`);
+          // Continue with other notes even if one fails
+          continue;
+        }
       }
 
       this.settings.lastSyncTime = new Date().toISOString();
       await this.saveSettings();
 
-      const message = `Synced ${notes.length} notes from Klarity`;
+      const message = `Synced ${processed}/${notes.length} notes from Klarity`;
       statusBarItem.setText(message);
       if (showNotice) {
         new Notice(message);
@@ -209,7 +266,7 @@ export default class KlarityPlugin extends Plugin {
         statusBarItem.remove();
       }, 5000);
     } catch (error) {
-      const errorMessage = "Failed to sync with Klarity";
+      const errorMessage = error.message || "Failed to sync with Klarity";
       statusBarItem.setText(errorMessage);
       new Notice(errorMessage);
       setTimeout(() => {
